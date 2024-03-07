@@ -1,18 +1,18 @@
+import { ArrowRightOutlined, CalendarOutlined } from "@ant-design/icons";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { DatePicker } from "antd";
+import koKR from "antd/lib/date-picker/locale/ko_KR";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
+import DaumPostcode from "react-daum-postcode";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import * as yup from "yup";
 import { SideBar } from "../../components/SideBar";
 import Mytitle from "../../components/my/Mytitle";
 import Layout from "../../layouts/Layout";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { ArrowRightOutlined, CalendarOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
-import { DatePicker } from "antd";
-import koKR from "antd/lib/date-picker/locale/ko_KR";
-import DaumPostcode from "react-daum-postcode";
-import { useSelector } from "react-redux";
 
-import { GetProd, postprod, putProd } from "../../api/prod/prod_api";
+import { GetProd, putProd } from "../../api/prod/prod_api";
 import { Modal } from "../../components/address/Address";
 import { BtSection, CancelBt, SaveBt } from "../../styles/join/JoinPageStyle";
 import {
@@ -20,12 +20,12 @@ import {
   BtWrap,
   BtnColor,
   BtnColorSub,
+  HashDiv,
   ListDiv,
   PriceDiv,
   ProductImgBt,
   ProductImgMap,
   Resets,
-  HashDiv,
 } from "../../styles/prod/productsStyle";
 // 오늘 날짜 추적
 import moment from "moment";
@@ -84,7 +84,6 @@ const validationSchema = yup.object({
   rentalPrice: yup
     .string("내용을 입력하세요.")
     .min(3, "100원 이상 입력하세요")
-    // .max(10, "21억까지만 입력하세요 ")
     .required("하루대여 가격은 필수 입력 사항입니다."),
   rentalStartDate: yup
     .string("내용을 입력하세요.")
@@ -129,9 +128,7 @@ const Modify = () => {
   const mainCategory = parseInt(searchParams.get("mc"));
   const subCategory = parseInt(searchParams.get("sc"));
   const productId = parseInt(searchParams.get("productId"));
-  // get 한목록 가져오기
-  // const [stays, setStays] = useState(initStateData);
-  // const [productData, setProductData] = useState(initStateData);
+
   const [productData, setProductData] = useState(initStateData);
   // 삭제할 이미지 목록
   const [delPics, setDelPics] = useState([]);
@@ -334,41 +331,7 @@ const Modify = () => {
       setValueDeposit(inputValue);
     }
   };
-  // const handleDecrease = () => {
-  //   const v = valueDeoposit > 60 ? valueDeoposit - 10 : valueDeoposit;
-  //   // hook-form 의 전용함수 활용
-  //   setValue("depositPer", v);
-  //   // 아래는 값을 보관
-  //   setValueDeposit(prevValue => (prevValue > 60 ? prevValue - 10 : prevValue));
-  //   // setValueDeposit(prevValue => (prevValue > 60 ? prevValue - 10 : 50));
-  // };
-  // const handleIncrease = () => {
-  //   const v = valueDeoposit < 100 ? valueDeoposit + 10 : valueDeoposit;
-  //   // hook-form 의 전용함수 활용
-  //   setValue("depositPer", v);
-  //   // 아래는 값을 보관함.
-  //   setValueDeposit(prevValue =>
-  //     prevValue < 100 ? prevValue + 10 : prevValue,
-  //   );
-  // };
-  // const [buyDateNow, setBuyDateNow] = useState(null);
-  // const handleChangeBuyDate = (date, dateString) => {
-  //   setBuyDateNow(date);
-  //   // date: moment 객체 (선택된 날짜)
-  //   // dateString: 선택된 날짜를 문자열로 표현한 값
-  //   // console.log("Selected Date:", dateString);
-  //   var today = new Date();
-  //   var comparisonDate = new Date(dateString);
-  //   // 오늘 날짜가 comparisonDate 이전인지 확인
-  //   if (today > comparisonDate) {
-  //     setBuyDateNow(dateString);
-  //     setValue("buyDate", dateString);
-  //   } else {
-  //     alert("오늘 이전 날짜를 선택해주세요.");
-  //     setValue("buyDate", "");
-  //     setBuyDateNow(null);
-  //   }
-  // };
+
   const [selectedDateRange, setSelectedDateRange] = useState([]);
   const calendarContainerRef = useRef(null);
   const handleDateRangeChange = (dates, dateStrings) => {
@@ -380,11 +343,7 @@ const Modify = () => {
   useEffect(() => {
     setBtData(btListPk[selectCate]);
   }, [selectCate]);
-  useEffect(() => {
-    // setValue("buyDate", "");
-    // setValue("rentalStartDate", "");
-    // setValue("rentalEndDate", "");
-  }, []);
+
   useEffect(() => {
     setBtData(btListPk[selectCate]);
   }, [selectCate]);
@@ -521,8 +480,6 @@ const Modify = () => {
     // failPostDatas("/");
   };
   const handleReset = () => {
-    // setValue("depositPer", 50); // hook-form의 전용 함수를 사용하여 depositPer 값을 50으로 설정
-    // setValueDeposit(50); // state 값을 50으로 설정
     // 초기화 하기
     fetchData();
   };
@@ -779,80 +736,60 @@ const Modify = () => {
               <HashDiv>
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags1")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags2")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags3")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags4")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags5")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags6")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags7")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags8")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags9")}
                 />
 
                 <input
                   type="text"
-                  // value={str}
-                  // onChange={e => handleChangeS(e)}
                   placeholder="#태그를작성해주세요"
                   {...register("hashTags10")}
                 />
@@ -926,8 +863,6 @@ const Modify = () => {
               <div>
                 <input
                   type="text"
-                  // {...register("addr")}
-                  // value={address}
                   value={address}
                   placeholder="주소 검색을 해주세요."
                   onClick={handleClickButton}
@@ -945,7 +880,6 @@ const Modify = () => {
                   type="text"
                   value={restAddress}
                   placeholder="상세 주소를 입력해주세요."
-                  // {...register("restAddr")}
                   name="restAddress"
                   onChange={handleChangeRestAddress}
                 />

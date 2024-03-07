@@ -65,14 +65,14 @@ const contentData = [
       <p>
         - 결제 방법: 원하는 거래 날짜를 선택한 후 &quot;결제하기&quot; 버튼을
         클릭하고,결제 수단을 선택하여 결제하면 됩니다.
-        <span style={{ display: `block`, margin: `8px 8px 0 0` }}></span>
-        <span style={{ display: `block`, margin: `8px 8px 0 0` }}></span>- 결제
-        취소 및 환불: 마이 페이지의 &#39;예약 내역&#39;에서 대여가 시작되지 않은
+        <span style={{ display: `block`, margin: `8px 8px 0 0` }} />
+        <span style={{ display: `block`, margin: `8px 8px 0 0` }} />- 결제 취소
+        및 환불: 마이 페이지의 &#39;예약 내역&#39;에서 대여가 시작되지 않은
         상품들은 결제 취소가 가능합니다. 결제 취소를 원하는 경우, 해당 예약
         내역을 찾아 취소 옵션을 선택하면 간단한 절차를 통해 예약을 취소하고 환불
         처리를 진행할 수 있습니다.
-        <span style={{ display: `block`, margin: `8px 8px 0 0` }}></span>
-        <span style={{ display: `block`, margin: `8px 8px 0 0` }}></span>
+        <span style={{ display: `block`, margin: `8px 8px 0 0` }} />
+        <span style={{ display: `block`, margin: `8px 8px 0 0` }} />
         <span style={{ display: `block`, margin: `8px 8px 0 0` }} />
         <span style={{ color: "#2C39B5" }}>
           ※ 환불 상세 내용은 아래와 같습니다 ※
@@ -154,11 +154,10 @@ const contentData = [
     content: <h3>알려주세요 </h3>,
     description: (
       <p>
-        <span style={{ display: `block`, margin: `8px px 0 0` }}></span>- ID
-        찾기: 회원 아이디를 잊어버리셨다면, 메인 페이지 -&gt; 로그인 -&gt;
-        아이디 찾기 페이지에서 회원 가입 시 등록한 정보(예: 이메일 주소,
-        휴대전화 번호)를 입력하시면, 등록된 정보와 일치하는 회원 아이디를
-        확인하실 수 있습니다.
+        <span style={{ display: `block`, margin: `8px px 0 0` }} />- ID 찾기:
+        회원 아이디를 잊어버리셨다면, 메인 페이지 -&gt; 로그인 -&gt; 아이디 찾기
+        페이지에서 회원 가입 시 등록한 정보(예: 이메일 주소, 휴대전화 번호)를
+        입력하시면, 등록된 정보와 일치하는 회원 아이디를 확인하실 수 있습니다.
         <span style={{ display: `block`, margin: `8px 8px 0 0` }} />
         - 회원 가입: 회원 가입 시에는 사용자의 개인 정보를 안전하게 관리하기
         위해 모든 필수 항목을 정확하게 기입하셔야 합니다. 또한, 회원의 안전한
@@ -185,19 +184,19 @@ const contentData = [
     content: <h3>고객센터 전화번호와 운영시간을 알려주세요</h3>,
     description: (
       <p>
-        <span style={{ display: `block`, margin: `7px px 0 0` }}></span>
+        <span style={{ display: `block`, margin: `7px px 0 0` }} />
         <h1 style={{ color: "#2C39B5" }}>
           빌리 고객센터 전화번호 1803-3124 입니다.
-          <span style={{ display: `block`, margin: `7px 7px 0 0` }}></span>
+          <span style={{ display: `block`, margin: `7px 7px 0 0` }} />
         </h1>
 
         <h2>
-          <span style={{ display: `block`, margin: `7px 7px 0 0` }}></span>
+          <span style={{ display: `block`, margin: `7px 7px 0 0` }} />
           <h3 style={{ color: "#AEAEB3" }}>[운영시간]</h3>
         </h2>
         <h3 style={{ color: "#AEAEB3" }}>
           월 ~ 금요일 09:00 ~ 18:00 주말, 공휴일 휴무
-          <span style={{ display: `block`, margin: `0 9px 0 0` }}></span>
+          <span style={{ display: `block`, margin: `0 9px 0 0` }} />
         </h3>
       </p>
     ),

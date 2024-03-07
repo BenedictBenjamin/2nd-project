@@ -1,20 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import Layout from "../../layouts/Layout";
+import { useForm } from "react-hook-form";
 import { SideBar } from "../../components/SideBar";
 import Mytitle from "../../components/my/Mytitle";
-import { useForm } from "react-hook-form";
+import Layout from "../../layouts/Layout";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import MyDatePicker from "./MyDatePicker";
-import { BtSection, CancelBt, SaveBt } from "../../styles/join/JoinPageStyle";
-import { Modal } from "../../components/address/Address";
-import DaumPostcode from "react-daum-postcode";
-import Calendar from "../../components/details/Calendar";
+import { ArrowRightOutlined, CalendarOutlined } from "@ant-design/icons";
 import { DatePicker } from "antd";
-import { CalendarOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import koKR from "antd/lib/date-picker/locale/ko_KR";
+import DaumPostcode from "react-daum-postcode";
+import { postprod } from "../../api/prod/prod_api";
+import { Modal } from "../../components/address/Address";
+import { BtSection, CancelBt, SaveBt } from "../../styles/join/JoinPageStyle";
 import {
   AllWidth,
   BtWrap,
@@ -25,15 +24,12 @@ import {
   PriceDiv,
   ProductImgBt,
   ProductImgMap,
-  ProductImgMapBt,
   Resets,
 } from "../../styles/prod/productsStyle";
-import { failPostDatas, postprod } from "../../api/prod/prod_api";
-import dayjs from "dayjs";
 // 오늘 이전날 선택불가
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router";
+import ModalMin from "../../components/prod/ModalMin";
 
 const btlist = [
   ["스마트워치", "태블릿", "갤럭시", "아이폰"],
@@ -43,19 +39,31 @@ const btlist = [
   ["플레이스테이션", "닌텐도", "Wii", "XBOX", "기타"],
 ];
 
+// 버튼 스타일
+const kmStyle = {
+  width: "150px",
+  height: "50px",
+  borderRadius: "10px",
+  background: "#2c39b5",
+  // border: "none",
+  cursor: "pointer",
+  color: "#fff",
+  fontSize: "22px",
+  fontStyle: "normal",
+  fontWeight: "400",
+  lineHeight: "normal",
+  border: "1px solid #2c39b5",
+};
+
 // 초기값
 const initState = {
   mainPic: "",
   pics: [],
   title: "", //재목(50자 한정)
   contents: "", // 내용 (1500자 제한)
-  // addr: "", //주소
-  // restAddr: "", // 나머지 주소
-  // price: "", //가격
-  rentalPrice: "", //임대 가격
-  // depositPer: "50", //보증금 비율
 
-  // buyDate: "", //구매날짜
+  rentalPrice: "", //임대 가격
+
   rentalStartDate: "", //임대시작
   rentalEndDate: "", // 임대 종료
   icategory: {
@@ -64,6 +72,7 @@ const initState = {
     subCategory: "1", //하위 카테고리
   },
 };
+
 // 검증 코드 yup
 const validationSchema = yup.object({
   title: yup
@@ -80,7 +89,7 @@ const validationSchema = yup.object({
   rentalPrice: yup
     .string("내용을 입력하세요.")
     .min(3, "100원 이상 입력하세요")
-    // .max(10, "21억까지만 입력하세요 ")
+
     .required("하루대여 가격은 필수 입력 사항입니다."),
 
   rentalStartDate: yup
@@ -89,7 +98,7 @@ const validationSchema = yup.object({
   rentalEndDate: yup
     .string("내용을 입력하세요.")
     .required(" / 거래 종료 날짜는 필수 입력 사항입니다."),
-  // 주석 해제했다 ( 받은 코드 )
+
   addr: yup
     .string("내용 입력하세요.")
     .min(2, "주소를 입력하세요")
@@ -201,13 +210,36 @@ const Write = () => {
     }
   };
 
+  const [modalImgDelete, setModalImgDelete] = useState(false);
+
   const removeImgList = _index => {
     // console.log(_index);
     // console.log(fileCount);
+
     if (fileCount === 1) {
-      alert("상품 대표 이미지는 최소 1개 이상 등록 하셔야 합니다.");
+      // alert("상품 대표 이미지는 최소 1개 이상 등록 하셔야 합니다.");
+      setModalImgDelete(true);
       return false;
     }
+
+    // // 이지미 파일 1장 삭제 금지 모달창
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [fileCount, setFileCount] = useState(0); // 파일 카운트 상태 추가
+
+    // const removeImgList = _index => {
+    //   // console.log(_index);
+    //   // console.log(fileCount);
+    //   if (fileCount === 1) {
+    //     // 파일 카운트가 1이면 모달 열기
+    //     setIsModalOpen(true);
+    //     return false;
+    //   }
+    // };
+
+    // const closeModal = () => {
+    //   // 모달 닫기 함수
+    //   setIsModalOpen(false);
+    // };
 
     const arr = imageBefore.filter((item, index) => index !== _index);
     setImageBefore(arr);
@@ -272,7 +304,8 @@ const Write = () => {
 
   // 확인 버튼 선택시 실행
   const handleSubmitMy = async data => {
-    // console.log("================== 확인 : ", data);
+    console.log("================== 확인 : ", data);
+    console.log("================", restAddress);
 
     const hashArr = [];
 
@@ -291,7 +324,7 @@ const Write = () => {
           title: data.title, //재목(50자 한정)
           contents: data.contents, // 내용 (1500자 제한)
           addr: address, //주소
-          restAddr: restAddress, // 나머지 주소
+          restAddr: data.restAddr, // 나머지 주소
 
           rentalPrice: data.rentalPrice, //임대 가격
 
@@ -377,8 +410,20 @@ const Write = () => {
   const disabledDate = current => {
     return current && current < moment().startOf("day");
   };
+
   return (
     <Layout>
+      {/***** 모달창 */}
+      {modalImgDelete ? (
+        <ModalMin
+          title={"상품 대표 이미지는 최소 1개 이상 등록 하셔야 합니다."}
+          deletes={"삭제"}
+          registration={"닫기"}
+          onCloseClick={() => setModalImgDelete(false)}
+        />
+      ) : null}
+      {/***** 모달창 */}
+
       <SideBar />
       <AllWidth>
         <div>
@@ -432,6 +477,7 @@ const Write = () => {
                 ))}
               </ProductImgMap>
             </ListDiv>
+
             <ListDiv>
               <div>
                 <label htmlFor="product">
@@ -547,8 +593,6 @@ const Write = () => {
                 <div>
                   <textarea
                     id="detail"
-                    //수정중
-                    // onKeyDown={handleInputAction}
                     maxLength={1500}
                     {...register("contents")}
                     placeholder="구매시기, 브랜드/모델명, 제품의 상태 (사용감,하자 유무) 등을 입력해 주세요."
@@ -709,9 +753,9 @@ const Write = () => {
                   <div style={{ color: "red" }}>주소를 검색해주세요.</div>
                 )}
                 {/* 기본 코드  */}
-                <div style={{ color: "red" }}>
+                {/* <div style={{ color: "red" }}>
                   {formState.errors.addr?.message}
-                </div>
+                </div> */}
 
                 <input
                   type="text"
@@ -719,9 +763,9 @@ const Write = () => {
                   {...register("restAddr")}
                   onChange={handleChangeRestAddress}
                 />
-                <div style={{ color: "red" }}>
+                {/* <div style={{ color: "red" }}>
                   {formState.errors.restAddr?.message}
-                </div>
+                </div> */}
 
                 {addrModal && (
                   <Modal handleClose={handleCloseModal}>
@@ -735,7 +779,11 @@ const Write = () => {
             </ListDiv>
             <BtSection>
               <CancelBt onClick={handleCancel}>취소</CancelBt>
-              <SaveBt type="submit">저장</SaveBt>
+              {/* <SaveBt type="submit">저장</SaveBt> */}
+
+              <button type="submit" style={kmStyle}>
+                저장
+              </button>
               {/* {address && restAddress ? (
                 <SaveBt type="submit">저장</SaveBt>
               ) : (
